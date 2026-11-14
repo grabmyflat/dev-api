@@ -1,6 +1,4 @@
-const cloudinary = require('cloudinary').v2;
-
-console.log('Cloudinary Cloud Name:', process.env.CLOUDINARY_CLOUD_NAME);
+const { v2: cloudinary } = require('cloudinary');
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -8,4 +6,16 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-module.exports = cloudinary;
+const getCloudinaryStatus = () => {
+    if (
+        process.env.CLOUDINARY_CLOUD_NAME &&
+        process.env.CLOUDINARY_API_KEY &&
+        process.env.CLOUDINARY_API_SECRET
+    ) {
+        return '🟢 CONFIGURED';
+    }
+
+    return '🔴 NOT CONFIGURED';
+};
+
+module.exports = { cloudinary, getCloudinaryStatus };
