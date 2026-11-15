@@ -2,7 +2,7 @@ const axios = require('axios');
 
 class WhatsAppService {
   constructor() {
-    this.baseUrl = `https://graph.facebook.com/v23.0/${process.env.WHATSAPP_PHONE_NUMBER_ID}/messages`;
+    this.baseUrl = `https://graph.facebook.com/v25.0/${process.env.WHATSAPP_PHONE_NUMBER_ID}/messages`;
     this.headers = {
       Authorization: `Bearer ${process.env.WHATSAPP_TOKEN}`,
       'Content-Type': 'application/json'
