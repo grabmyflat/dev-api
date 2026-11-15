@@ -15,6 +15,7 @@ const profileRoutes = require('./routes/profile.routes');
 const testRoutes = require('./routes/test.routes');
 const uploadPropertiesImagesRoutes = require('./routes/upload-properties-images.routes');
 const whatsappRoutes = require('./routes/whatsapp.routes');
+const authRoutes = require('./routes/auth.routes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -87,6 +88,8 @@ app.use('/api/upload-properties-images', uploadPropertiesImagesRoutes);
 app.use('/api/test-cloudinary', testRoutes);
 
 app.use('/webhook', whatsappRoutes);
+
+app.use('/api/auth', authRoutes);
 
 
 /* -------------------------------------------------------------------------- */
