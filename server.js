@@ -14,6 +14,7 @@ const { getCloudinaryStatus } = require('./config/cloudinary');
 const profileRoutes = require('./routes/profile.routes');
 const testRoutes = require('./routes/test.routes');
 const uploadPropertiesImagesRoutes = require('./routes/upload-properties-images.routes');
+const whatsappRoutes = require('./routes/whatsapp.routes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -28,10 +29,7 @@ connectDB();
 /*                               Middlewares                                  */
 /* -------------------------------------------------------------------------- */
 
-app.use(cors({
-    origin: true,
-    credentials: true
-}));
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -52,7 +50,8 @@ app.get('/', (req, res) => {
             status: {
                 api: getStatus(),
                 database: getDatabaseStatus(),
-                cloudinary: getCloudinaryStatus()
+                cloudinary: getCloudinaryStatus(),
+                whatsapp: getWhatsAppStatus()
             },
             startedAt: new Date().toLocaleString('en-IN', {
                 day: '2-digit',
@@ -72,6 +71,7 @@ app.get('/health', async (req, res) => {
         success: true,
         database: getDatabaseStatus(),
         cloudinary: await getCloudinaryStatus(),
+        whatsapp: getWhatsAppStatus(),
         timestamp: new Date().toISOString()
     });
 });
@@ -85,6 +85,9 @@ app.use('/api/users', profileRoutes);
 app.use('/api/upload-properties-images', uploadPropertiesImagesRoutes);
 
 app.use('/api/test-cloudinary', testRoutes);
+
+app.use('/webhook', whatsappRoutes);
+
 
 /* -------------------------------------------------------------------------- */
 /*                                404 Handler                                 */
@@ -127,6 +130,13 @@ const getStatus = () => {
     }
 };
 
+const getWhatsAppStatus = () => {
+    return process.env.WHATSAPP_TOKEN &&
+           process.env.WHATSAPP_PHONE_NUMBER_ID
+        ? '🟢 CONFIGURED'
+        : '🔴 NOT CONFIGURED';
+};
+
 app.listen(PORT, () => {
     console.log(`
 ==================================================
@@ -139,6 +149,7 @@ app.listen(PORT, () => {
 📡 API Status  : ${getStatus()}
 🗄️ Database    : ${getDatabaseStatus()}
 ☁️ Cloudinary  : ${getCloudinaryStatus()}
+🪪 Whatsapp    : ${getWhatsAppStatus()},
 ⏰ Started At  : ${new Date().toLocaleString('en-IN')}
 ==================================================
     `);
