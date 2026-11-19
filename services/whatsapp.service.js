@@ -9,54 +9,90 @@ class WhatsAppService {
     };
   }
 
-async sendTextMessage(to, message) {
+  async sendTextMessage(to, message) {
     try {
-        const response = await axios.post(
-            this.baseUrl,
-            {
-                messaging_product: 'whatsapp',
-                to,
-                type: 'text',
-                text: {
-                    body: message
-                }
-            },
+      const response = await axios.post(
+        this.baseUrl,
+        {
+          messaging_product: 'whatsapp',
+          to,
+          type: 'text',
+          text: {
+            body: message
+          }
+        },
             { headers: this.headers }
-        );
+      );
 
-        return response.data;
+      return response.data;
     } catch (error) {
-        console.error(
+      console.error(
             'WhatsApp Error:',
-            error.response?.data || error.message
-        );
-        throw error;
+        error.response?.data || error.message
+      );
+      throw error;
     }
-}
-
-  async sendOTP(to, otp) {
-    return this.sendTextMessage(
-      to,
-      `Your GrabMyFlat OTP is ${otp}. Valid for 10 minutes. Do not share it with anyone.`
-    );
   }
 
   async sendTemplateMessage(to, templateName, language = 'en_US', components = []) {
-    return axios.post(
-      this.baseUrl,
-      {
-        messaging_product: 'whatsapp',
-        to,
-        type: 'template',
-        template: {
-          name: templateName,
-          language: {
-            code: language
-          },
-          components
+    try {
+      const response = await axios.post(
+        this.baseUrl,
+        {
+          messaging_product: 'whatsapp',
+          to,
+          type: 'template',
+          template: {
+            name: templateName,
+            language: {
+              code: language
+            },
+            components
+          }
+        },
+        {
+          headers: this.headers
         }
-      },
-      { headers: this.headers }
+      );
+
+      return response.data;
+
+    } catch (error) {
+      console.error(
+        'WhatsApp Template Error:',
+        error.response?.data || error.message
+      );
+
+      throw error;
+    }
+  }
+
+  /**
+   * Send OTP using approved WhatsApp template
+   *
+   * Template Example:
+   * Name: grabmyflat_otp
+   *
+   * Message:
+   * Your GrabMyFlat OTP is {{1}}
+   * Valid for 10 minutes.
+   */
+  async sendOTP(to, otp) {
+    return this.sendTemplateMessage(
+      to,
+      'jaspers_market_order_confirmation_v1',
+      'en_US',
+      [
+        {
+          type: 'body',
+          parameters: [
+            {
+              type: 'text',
+              text: otp
+            }
+          ]
+        }
+      ]
     );
   }
 
@@ -65,11 +101,11 @@ async sendTextMessage(to, message) {
       to,
       `🏠 New Property Available
 
-        Title: ${property.title}
-        Location: ${property.location}
-        Rent: ₹${property.rent}
+Title: ${property.title}
+Location: ${property.location}
+Rent: ₹${property.rent}
 
-        Visit GrabMyFlat for more details.`
+Visit GrabMyFlat for more details.`
     );
   }
 
@@ -78,11 +114,11 @@ async sendTextMessage(to, message) {
       to,
       `📢 New Enquiry
 
-        Property: ${enquiry.propertyName}
-        Name: ${enquiry.userName}
-        Mobile: ${enquiry.mobile}
+Property: ${enquiry.propertyName}
+Name: ${enquiry.userName}
+Mobile: ${enquiry.mobile}
 
-        Please contact the customer.`
+Please contact the customer.`
     );
   }
 }

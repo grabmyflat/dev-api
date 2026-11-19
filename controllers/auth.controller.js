@@ -46,9 +46,20 @@ const verifyOTP = async (req, res) => {
 
         otpStore.delete(mobile);
 
-        return res.json({
+        const token = jwt.sign(
+            {
+                mobile
+            },
+            process.env.JWT_SECRET,
+            {
+                expiresIn: '30d'
+            }
+        );
+
+        return res.status(200).json({
             success: true,
-            message: 'OTP verified successfully'
+            message: 'OTP verified successfully',
+            token
         });
 
     } catch (error) {
