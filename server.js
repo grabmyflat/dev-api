@@ -4,6 +4,9 @@ const express = require('express');
 const cors = require('cors');
 const packageJson = require('./package.json');
 
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./swagger');
+
 const { connectDB, getDatabaseStatus } = require('./config/db');
 const { getCloudinaryStatus } = require('./config/cloudinary');
 
