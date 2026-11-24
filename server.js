@@ -91,6 +91,7 @@ app.use('/webhook', whatsappRoutes);
 
 app.use('/api/auth', authRoutes);
 
+app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 /* -------------------------------------------------------------------------- */
 /*                                404 Handler                                 */
