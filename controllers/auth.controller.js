@@ -14,10 +14,11 @@ const sendOTP = async (req, res) => {
 
     console.log('Generated OTP:', otp);
 
-    await whatsappService.sendOTP(mobile, otp);
+    // await whatsappService.sendOTP(mobile, otp);
 
     return res.status(200).json({
       success: true,
+      otp: otp,
       message: 'OTP sent successfully'
     });
 
