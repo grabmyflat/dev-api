@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 const whatsappService = require('../services/whatsapp.service');
 
 const otpStore = new Map();
