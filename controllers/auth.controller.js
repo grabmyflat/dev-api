@@ -40,6 +40,10 @@ const verifyOTP = async (req, res) => {
 
         const savedOtp = otpStore.get(mobile);
 
+        console.log('Mobile:', mobile);
+        console.log('Entered OTP:', otp);
+        console.log('Stored OTP:', savedOtp);
+
         if (savedOtp !== otp) {
             return res.status(400).json({
                 success: false,
