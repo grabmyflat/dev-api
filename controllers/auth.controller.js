@@ -12,6 +12,8 @@ const sendOTP = async (req, res) => {
       1000 + Math.random() * 9000
     ).toString();
 
+    otpStore.set(mobile, otp);
+
     console.log('Generated OTP:', otp);
 
     // await whatsappService.sendOTP(mobile, otp);
@@ -47,15 +49,7 @@ const verifyOTP = async (req, res) => {
 
         otpStore.delete(mobile);
 
-        const token = jwt.sign(
-            {
-                mobile
-            },
-            process.env.JWT_SECRET,
-            {
-                expiresIn: '30d'
-            }
-        );
+        const token = jwt.sign({ mobile }, process.env.JWT_SECRET, { expiresIn: '30d' });
 
         return res.status(200).json({
             success: true,
